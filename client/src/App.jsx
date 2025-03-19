@@ -41,6 +41,7 @@ const appRouter = createBrowserRouter([
             <Profile />
         ),
       },
+
     ],
   },
 ]);

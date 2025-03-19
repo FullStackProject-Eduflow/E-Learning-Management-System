@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Link} from "react-router-dom";
 import { DarkMode } from "@/DarkMode";
 import {
     Sheet,
@@ -18,6 +17,7 @@ import {
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Link } from "react-router-dom";
 const Navbar = () => {
     const user = true;
     return (
@@ -43,10 +43,10 @@ const Navbar = () => {
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
                                     <DropdownMenuItem>
-                                        <Link to="my-learning">My Learning</Link>
+                                    <Link to="my-learning">My learning</Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem>
-                                        <Link to="profile">Edit Profile</Link>
+                                    <Link to="profile">Edit Profile</Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem>
                                         Log out
