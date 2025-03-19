@@ -14,10 +14,13 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import React from "react";
 import Course from "./Course";
+import { useLoadUserQuery } from "@/features/api/authApi";
 
 const Profile = () => {
-
-  const isLoading = false;
+  
+  const {data, isLoading} = useLoadUserQuery();
+  console.log(data);
+  // const isLoading = false;
   const enrolledCourses=[1,2 ];
   return (
     <div className="max-w-4xl mx-auto px-4 my-10">
