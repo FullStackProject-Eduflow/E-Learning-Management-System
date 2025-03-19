@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Link} from "react-router-dom";
 import { DarkMode } from "@/DarkMode";
 import {
     Sheet,
@@ -42,10 +43,10 @@ const Navbar = () => {
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
                                     <DropdownMenuItem>
-                                        My learning
+                                        <Link to="my-learning">My Learning</Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem>
-                                        Edit Profile
+                                        <Link to="profile">Edit Profile</Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem>
                                         Log out
