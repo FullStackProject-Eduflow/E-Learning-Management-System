@@ -1,6 +1,7 @@
 //ftpvLGhsP3HpAKUZ
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
+
 import {
   Card,
   CardContent,
@@ -44,6 +45,7 @@ const Login = () => {
       setLoginInput({...loginInput, [name]: value});
   }};
 
+
   const handleRegistration = async (type) => {
     const inputData = type === "signup" ? signupInput : loginInput;
     const action= type === "signup" ? registerUser : loginUser;
@@ -55,16 +57,17 @@ const Login = () => {
       toast.success(registerData.message || "Signup successful")
     }
     if(registerError){
-      toast.error(registerData.data.message || "Signup failed")
+      toast.error(registerError.data.message || "Signup failed")
     }
     if(loginIsSuccess && loginData){
       toast.success(loginData.message || "Login successful")
       navigate("/");
     }
     if(loginError){
-      toast.error(loginData.data.message || "login failed")
+      toast.error(loginError.data.message || "login failed")
     }
   },[loginIsLoading,registerIsLoading, loginData,registerData, loginError, registerError]);
+
   return (
     <div className="flex items-center w-full justify-center mt-20">
       <Tabs defaultValue="account" className="w-[400px]">
@@ -110,6 +113,7 @@ const Login = () => {
               </div>
             </CardContent>
             <CardFooter>
+
               <Button disabled={registerIsLoading} onClick={()=>handleRegistration("signup")}>
               {
                   registerIsLoading ? (
@@ -117,6 +121,7 @@ const Login = () => {
                   ) : "Signup"
                 }
               </Button>
+
             </CardFooter>
           </Card>
         </TabsContent>
@@ -149,6 +154,7 @@ const Login = () => {
               </div>
             </CardContent>
             <CardFooter>
+
               <Button disabled={loginIsLoading} onClick={()=>handleRegistration("login")}>
                 {
                   loginIsLoading ? (
