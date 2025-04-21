@@ -33,6 +33,8 @@
     "react-quill": "^2.0.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.3.0",
+    "rechart": "^0.0.1",
+    "recharts": "^2.15.3",
     "sonner": "^2.0.1",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7"
