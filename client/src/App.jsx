@@ -1,14 +1,14 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import './App.css'
-import Navbar from './components/Navbar'
-import { Button } from './components/ui/button'
-import Login from './pages/login'
-import HeroSection from './pages/student/HeroSection'
-import MainLayout from './layout/MainLayout'
-import Courses from './pages/student/Courses'
-import MyLearning from './pages/student/MyLearning'
-import Profile from './pages/student/Profile'
-import CourseDetail from './pages/student/CourseDetail'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./App.css";
+import Navbar from "./components/Navbar";
+import { Button } from "./components/ui/button";
+import Login from "./pages/login";
+import HeroSection from "./pages/student/HeroSection";
+import MainLayout from "./layout/MainLayout";
+import Courses from "./pages/student/Courses";
+import MyLearning from "./pages/student/MyLearning";
+import Profile from "./pages/student/Profile";
+import CourseDetail from "./pages/student/CourseDetail";
 import Sidebar from "./pages/admin/Sidebar";
 import Dashboard from "./pages/admin/Dashboard";
 import AddCourse from "./pages/admin/course/AddCourse";
@@ -16,8 +16,9 @@ import CourseTable from "./pages/admin/course/CourseTable";
 import EditCourse from "./pages/admin/course/EditCourse";
 import CreateLecture from "./pages/admin/lecture/CreateLecture";
 import EditLecture from "./pages/admin/lecture/EditLecture";
-import CourseProgress from './pages/student/CourseProgress'
-import SearchPage from './pages/student/SearchPage'
+import CourseProgress from "./pages/student/CourseProgress";
+import SearchPage from "./pages/student/SearchPage";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 const appRouter = createBrowserRouter([
   {
@@ -35,41 +36,28 @@ const appRouter = createBrowserRouter([
       },
       {
         path: "login",
-        element: (
-            <Login />
-        ),
+        element: <Login />,
       },
       {
         path: "my-learning",
-        element: (
-            <MyLearning />
-        ),
+        element: <MyLearning />,
       },
       {
         path: "profile",
-        element: (
-            <Profile />
-        ),
+        element: <Profile />,
       },
       {
         path: "course/search",
-        element: (
-            <SearchPage />
-        ),
+        element: <SearchPage />,
       },
       {
         path: "course-detail/:courseId",
-        element: (
-            <CourseDetail />
-        ),
+        element: <CourseDetail />,
       },
       {
         path: "course-progress/:courseId",
-        element: (
-            <CourseProgress />
-        ),
+        element: <CourseProgress />,
       },
-
 
       //admin routes are from here
       {
@@ -102,20 +90,18 @@ const appRouter = createBrowserRouter([
           },
         ],
       },
-
     ],
   },
 ]);
 
 function App() {
-  
-
   return (
     <main>
-      <RouterProvider router={appRouter}/>
+      <ThemeProvider>
+        <RouterProvider router={appRouter} />
+      </ThemeProvider>
     </main>
-    
-  )
+  );
 }
 
-export default App
+export default App;
