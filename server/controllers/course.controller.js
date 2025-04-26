@@ -3,7 +3,6 @@ import { Course } from "../models/course.model.js";
 import { Lecture } from "../models/lecture.model.js";
 import {deleteMediaFromCloudinary, deleteVideoFromCloudinary, uploadMedia} from "../utils/cloudinary.js";
 
-
 export const createCourse = async (req,res) => {
     try {
         const {courseTitle, category} = req.body;
@@ -70,8 +69,26 @@ export const searchCourse = async (req,res) => {
         console.log(error);
         
     }
-} 
+}
 
+export const getPublishedCourse = async (_,res) => {
+    try {
+        const courses = await Course.find({isPublished:true}).populate({path:"creator", select:"name photoUrl"});
+        if(!courses){
+            return res.status(404).json({
+                message:"Course not found"
+            })
+        }
+        return res.status(200).json({
+            courses,
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message:"Failed to get published courses"
+        })
+    }
+}
 export const getCreatorCourses = async (req,res) => {
     try {
         const userId = req.id;
@@ -92,7 +109,6 @@ export const getCreatorCourses = async (req,res) => {
         })
     }
 }
-
 export const editCourse = async (req,res) => {
     try {
         const courseId = req.params.courseId;
@@ -132,7 +148,6 @@ export const editCourse = async (req,res) => {
         })
     }
 }
-
 export const getCourseById = async (req,res) => {
     try {
         const {courseId} = req.params;
@@ -187,7 +202,6 @@ export const createLecture = async (req,res) => {
         })
     }
 }
-
 export const getCourseLecture = async (req,res) => {
     try {
         const {courseId} = req.params;
@@ -208,7 +222,6 @@ export const getCourseLecture = async (req,res) => {
         })
     }
 }
-
 export const editLecture = async (req,res) => {
     try {
         const {lectureTitle, videoInfo, isPreviewFree} = req.body;
@@ -246,7 +259,6 @@ export const editLecture = async (req,res) => {
         })
     }
 }
-
 export const removeLecture = async (req,res) => {
     try {
         const {lectureId} = req.params;
@@ -277,7 +289,6 @@ export const removeLecture = async (req,res) => {
         })
     }
 }
-
 export const getLectureById = async (req,res) => {
     try {
         const {lectureId} = req.params;
@@ -297,6 +308,7 @@ export const getLectureById = async (req,res) => {
         })
     }
 }
+
 
 // publich unpublish course logic
 
@@ -322,25 +334,6 @@ export const togglePublishCourse = async (req,res) => {
         console.log(error);
         return res.status(500).json({
             message:"Failed to update status"
-        })
-    }
-}
-
-export const getPublishedCourse = async (_,res) => {
-    try {
-        const courses = await Course.find({isPublished:true}).populate({path:"creator", select:"name photoUrl"});
-        if(!courses){
-            return res.status(404).json({
-                message:"Course not found"
-            })
-        }
-        return res.status(200).json({
-            courses,
-        })
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            message:"Failed to get published courses"
         })
     }
 }

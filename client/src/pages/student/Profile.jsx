@@ -23,7 +23,7 @@ import { toast } from "sonner";
 const Profile = () => {
   const [name, setName] = useState("");
   const [profilePhoto, setProfilePhoto] = useState("");
-
+ 
   const { data, isLoading, refetch } = useLoadUserQuery();
   const [
     updateUser,
@@ -44,7 +44,6 @@ const Profile = () => {
   };
 
   const updateUserHandler = async () => {
-    console.log(name,profilePhoto);
     const formData = new FormData();
     formData.append("name", name);
     formData.append("profilePhoto", profilePhoto);
