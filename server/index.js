@@ -50,10 +50,10 @@ app.use("/api/v1/user", userRoute);
 app.use("/api/v1/course", courseRoute);
 app.use("/api/v1/purchase", purchaseRoute); // keep this AFTER webhook
 app.use("/api/v1/progress", courseProgressRoute);
-// app.use(express.static(path.join(__dirname, "../client/dist")));
-// app.get('*',(req,res)=>{
-//   res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
-// });
+app.use(express.static(path.join(__dirname, "../client/dist")));
+app.get('*',(req,res)=>{
+  res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
+});
 app.listen(PORT, () => {
   console.log(`Server listen at port ${PORT}`);
 });
