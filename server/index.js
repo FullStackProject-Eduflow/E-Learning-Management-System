@@ -1,4 +1,6 @@
 import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -18,6 +20,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 import { stripeWebhook } from "./controllers/coursePurchase.controller.js";
 
+//setup for __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 // This MUST come before app.use(express.json())
 app.post(
   "/api/v1/purchase/webhook",
@@ -39,14 +44,16 @@ app.post(
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
-
 // Normal API routes
 app.use("/api/v1/media", mediaRoute);
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/course", courseRoute);
 app.use("/api/v1/purchase", purchaseRoute); // keep this AFTER webhook
 app.use("/api/v1/progress", courseProgressRoute);
-
+app.use(express.static(path.join(__dirname, "../client/dist")));
+app.get('*',(req,res)=>{
+  res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
+});
 app.listen(PORT, () => {
   console.log(`Server listen at port ${PORT}`);
 });
