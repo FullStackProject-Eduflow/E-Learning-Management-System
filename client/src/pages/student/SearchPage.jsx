@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import Filter from "./Filter";
+import SearchResult from "./SearchResult";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetSearchCourseQuery } from "@/features/api/courseApi";
 import { Link, useSearchParams } from "react-router-dom";
-import { AlertCircle} from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Filter from "./Filter";
-import SearchResult from "./SearchResult";
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();

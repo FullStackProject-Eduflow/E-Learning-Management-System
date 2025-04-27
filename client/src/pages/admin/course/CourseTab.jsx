@@ -29,7 +29,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const CourseTab = () => {
-  
   const [input, setInput] = useState({
     courseTitle: "",
     subTitle: "",
@@ -42,14 +41,19 @@ const CourseTab = () => {
 
   const params = useParams();
   const courseId = params.courseId;
-  const { data: courseByIdData, isLoading: courseByIdLoading , refetch} =
+
+  const { data: courseByIdData, isLoading: courseByIdLoading, refetch } =
     useGetCourseByIdQuery(courseId);
 
-    const [publishCourse, {}] = usePublishCourseMutation();
- 
+  const [publishCourse, { isLoading: isPublishing }] = usePublishCourseMutation();
+  const [editCourse, { data, isLoading, isSuccess, error }] = useEditCourseMutation();
+
+  const [previewThumbnail, setPreviewThumbnail] = useState("");
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if (courseByIdData?.course) { 
-        const course = courseByIdData?.course;
+    if (courseByIdData?.course) {
+      const course = courseByIdData.course;
       setInput({
         courseTitle: course.courseTitle,
         subTitle: course.subTitle,
@@ -62,12 +66,6 @@ const CourseTab = () => {
     }
   }, [courseByIdData]);
 
-  const [previewThumbnail, setPreviewThumbnail] = useState("");
-  const navigate = useNavigate();
-
-  const [editCourse, { data, isLoading, isSuccess, error }] =
-    useEditCourseMutation();
-
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
     setInput({ ...input, [name]: value });
@@ -76,10 +74,11 @@ const CourseTab = () => {
   const selectCategory = (value) => {
     setInput({ ...input, category: value });
   };
+
   const selectCourseLevel = (value) => {
     setInput({ ...input, courseLevel: value });
   };
-  // get file
+
   const selectThumbnail = (e) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -104,28 +103,28 @@ const CourseTab = () => {
   };
 
   const publishStatusHandler = async (action) => {
+    console.log("🟢 Button clicked with action:", action); // ✅ Step 1
+
     try {
-      const response = await publishCourse({courseId, query:action});
-      if(response.data){
-        refetch();
-        toast.success(response.data.message);
-      }
-    } catch (error) {
-      toast.error("Failed to publish or unpublish course");
+      const response = await publishCourse({ courseId, query: action }).unwrap();
+      refetch();
+      toast.success(response.message || "Status updated.");
+    } catch (err) {
+      toast.error(err?.data?.message || "Failed to publish/unpublish course");
     }
-  }
+  };
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success(data.message || "Course update.");
+      toast.success(data.message || "Course updated.");
     }
     if (error) {
-      toast.error(error.data.message || "Failed to update course");
+      toast.error(error?.data?.message || "Failed to update course");
     }
   }, [isSuccess, error]);
 
-  if(courseByIdLoading) return <h1>Loading...</h1>
- 
+  if (courseByIdLoading) return <h1>Loading...</h1>;
+
   return (
     <Card>
       <CardHeader className="flex flex-row justify-between">
@@ -136,10 +135,22 @@ const CourseTab = () => {
           </CardDescription>
         </div>
         <div className="space-x-2">
-          <Button disabled={courseByIdData?.course.lectures.length === 0} variant="outline" onClick={()=> publishStatusHandler(courseByIdData?.course.isPublished ? "false" : "true")}>
-            {courseByIdData?.course.isPublished ? "Unpublished" : "Publish"}
-          </Button>
-          <Button>Remove Course</Button>
+          <Button
+            disabled={false} // ✅ STEP 2: force enable the button
+            variant="outline"
+            onClick={() =>
+              publishStatusHandler(courseByIdData?.course.isPublished ? "false" : "true")
+            }
+          >
+          
+            {isPublishing ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please wait
+              </>
+            ) : courseByIdData?.course.isPublished ? "Unpublish" : "Publish"}
+        </Button>
+         <Button> </Button>
         </div>
       </CardHeader>
       <CardContent>
@@ -171,10 +182,7 @@ const CourseTab = () => {
           <div className="flex items-center gap-5">
             <div>
               <Label>Category</Label>
-              <Select
-                defaultValue={input.category}
-                onValueChange={selectCategory}
-              >
+              <Select defaultValue={input.category} onValueChange={selectCategory}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
@@ -183,15 +191,9 @@ const CourseTab = () => {
                     <SelectLabel>Category</SelectLabel>
                     <SelectItem value="Next JS">Next JS</SelectItem>
                     <SelectItem value="Data Science">Data Science</SelectItem>
-                    <SelectItem value="Frontend Development">
-                      Frontend Development
-                    </SelectItem>
-                    <SelectItem value="Fullstack Development">
-                      Fullstack Development
-                    </SelectItem>
-                    <SelectItem value="MERN Stack Development">
-                      MERN Stack Development
-                    </SelectItem>
+                    <SelectItem value="Frontend Development">Frontend Development</SelectItem>
+                    <SelectItem value="Fullstack Development">Fullstack Development</SelectItem>
+                    <SelectItem value="MERN Stack Development">MERN Stack Development</SelectItem>
                     <SelectItem value="Javascript">Javascript</SelectItem>
                     <SelectItem value="Python">Python</SelectItem>
                     <SelectItem value="Docker">Docker</SelectItem>
@@ -203,10 +205,7 @@ const CourseTab = () => {
             </div>
             <div>
               <Label>Course Level</Label>
-              <Select
-                defaultValue={input.courseLevel}
-                onValueChange={selectCourseLevel}
-              >
+              <Select defaultValue={input.courseLevel} onValueChange={selectCourseLevel}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a course level" />
                 </SelectTrigger>

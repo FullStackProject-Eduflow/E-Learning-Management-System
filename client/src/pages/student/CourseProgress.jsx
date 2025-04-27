@@ -1,25 +1,26 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { CheckCircle, CheckCircle2, CirclePlay } from "lucide-react";
+import { useLoadUserQuery } from "@/features/api/authApi";
 import {
   useCompleteCourseMutation,
   useGetCourseProgressQuery,
   useInCompleteCourseMutation,
   useUpdateLectureProgressMutation,
 } from "@/features/api/courseProgressApi";
+import { CheckCircle, CheckCircle2, CirclePlay } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
 const CourseProgress = () => {
   const params = useParams();
   const courseId = params.courseId;
-  const { data, isLoading, isError, refetch } =
-    useGetCourseProgressQuery(courseId);
+
+  const { data, isLoading, isError, refetch } = useGetCourseProgressQuery(courseId);
+  const { refetch: refetchUser } = useLoadUserQuery(); // ✅ Add refetch here
 
   const [updateLectureProgress] = useUpdateLectureProgressMutation();
-
   const [
     completeCourse,
     { data: markCompleteData, isSuccess: completedSuccess },
@@ -30,8 +31,10 @@ const CourseProgress = () => {
   ] = useInCompleteCourseMutation();
 
   useEffect(() => {
-    console.log(markCompleteData);
+    refetchUser(); // ✅ Force user data to refresh after redirect
+  }, []);
 
+  useEffect(() => {
     if (completedSuccess) {
       refetch();
       toast.success(markCompleteData.message);
@@ -43,14 +46,13 @@ const CourseProgress = () => {
   }, [completedSuccess, inCompletedSuccess]);
 
   const [currentLecture, setCurrentLecture] = useState(null);
+
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Failed to load course details</p>;
 
-  console.log(data);
   const { courseDetails, progress, completed } = data.data;
   const { courseTitle } = courseDetails;
 
-  // initialze the first lecture is not exist
   const initialLecture =
     currentLecture || (courseDetails.lectures && courseDetails.lectures[0]);
 
@@ -63,7 +65,6 @@ const CourseProgress = () => {
     refetch();
   };
 
-  // Handle select a specific lecture to watch
   const handleSelectLecture = (lecture) => {
     setCurrentLecture(lecture);
     handleLectureProgress(lecture._id);
@@ -72,14 +73,13 @@ const CourseProgress = () => {
   const handleCompleteCourse = async () => {
     await completeCourse(courseId);
   };
+
   const handleInCompleteCourse = async () => {
     await inCompleteCourse(courseId);
   };
 
-
   return (
     <div className="max-w-7xl mx-auto p-4">
-      {/* {Display course name} */}
       <div className="flex justify-between mb-4">
         <h1 className="text-2xl font-bold">{courseTitle}</h1>
         <Button
@@ -97,10 +97,8 @@ const CourseProgress = () => {
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">
-        {/* video section */}
         <div className="flex-1 md:w-3/5 h-fit rounded-lg shadow-lg p-4">
           <div>
-            {/* add video */}
             <video
               src={currentLecture?.videoUrl || initialLecture.videoUrl}
               controls
@@ -110,8 +108,7 @@ const CourseProgress = () => {
               }
             />
           </div>
-          {/* Display Current watching lecture title */}
-          <div className="mt-2">
+          <div className="mt-2 ">
             <h3 className="font-medium text-lg">
               {`Lecture ${
                 courseDetails.lectures.findIndex(
@@ -124,7 +121,6 @@ const CourseProgress = () => {
             </h3>
           </div>
         </div>
-        {/* Lecture Sidebar */}
         <div className="flex flex-col w-full md:w-2/5 border-t md:border-t-0 md:border-l border-gray-200 md:pl-4 pt-4 md:pt-0">
           <h2 className="font-semibold text-xl mb-4">Course Lecture</h2>
           <div className="flex-1 overflow-y-auto">
@@ -168,4 +164,5 @@ const CourseProgress = () => {
     </div>
   );
 };
+
 export default CourseProgress;
