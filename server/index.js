@@ -20,6 +20,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 import { stripeWebhook } from "./controllers/coursePurchase.controller.js";
 
+app.use(cors({ origin: "https://e-learning-management-system-1.onrender.com", credentials: true }));
 //setup for __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -39,7 +40,6 @@ app.post(
     return stripeWebhook(req, res);
   }
 );*/
-app.use(cors({ origin: "https://e-learning-management-system-1.onrender.com", credentials: true }));
 // Standard middlewares
 app.use(express.json());
 app.use(cookieParser());
