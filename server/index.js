@@ -39,7 +39,7 @@ app.post(
     return stripeWebhook(req, res);
   }
 );*/
-
+app.use(cors({ origin: "https://e-learning-management-system-1.onrender.com", credentials: true }));
 // Standard middlewares
 app.use(express.json());
 app.use(cookieParser());
@@ -53,7 +53,6 @@ app.use("/api/v1/progress", courseProgressRoute);
 // app.get('*',(req,res)=>{
 //   res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
 // });
-app.use(cors({ origin: "https://e-learning-management-system-1.onrender.com", credentials: true }));
 app.listen(PORT, () => {
   console.log(`Server listen at port ${PORT}`);
 });
