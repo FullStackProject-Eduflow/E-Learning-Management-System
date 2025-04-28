@@ -40,8 +40,8 @@ export const createCheckoutSession = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: `https://e-learning-management-system-1.onrender.com/course-progress/${courseId}`,
-      cancel_url: `https://e-learning-management-system-1.onrender.com/course-detail/${courseId}`,
+      success_url: `https://e-learning-management-system-1.onrender.com/my-learning`,
+      cancel_url: `https://e-learning-management-system-1.onrender.com/my-learning`,
       metadata: {
         courseId: courseId,
         userId: userId,
